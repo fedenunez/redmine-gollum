@@ -13,6 +13,8 @@ class GollumController < ApplicationController
     @editable = true
 
     show_page(params[:id])
+    show_wiki_index()
+    
   end
 
   def edit
@@ -53,6 +55,19 @@ class GollumController < ApplicationController
     end
   end
 
+  def show_wiki_index()
+      pages = @wiki.pages
+      count = pages.size
+      pages_li = ''  
+
+      pages_li += '<li><h3>Gollum content:</h3></li>';
+      count.times do | index |
+        page = pages[ index ]
+        pages_li += '<li><a href="' + page.name + '">' + page.name + '</a></li>';
+      end
+      @page_index = ('<ul id="pages" class="toc right">' + pages_li + '</ul>').html_safe
+  end
+     
   def find_project
     unless params[:project_id].present?
       render :status => 404
