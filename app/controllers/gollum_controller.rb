@@ -60,7 +60,6 @@ class GollumController < ApplicationController
       count = pages.size
       pages_li = ''  
 
-      pages_li += '<li><h3>Gollum content:</h3></li>';
       count.times do | index |
         page = pages[ index ]
         pages_li += '<li><a href="' + page.name + '">' + page.name + '</a></li>';
