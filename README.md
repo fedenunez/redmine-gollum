@@ -1,3 +1,8 @@
+
+My fork adds:
+============
+  - Sidebar listing all the gollum wiki pages.
+
 Redmine Gollum
 ==============
 
