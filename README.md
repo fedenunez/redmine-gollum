@@ -2,6 +2,10 @@
 My fork adds:
 ============
   - Sidebar listing all the gollum wiki pages.
+  - Support to show attachments
+  - Access to documents using fullpath
+
+
 
 Redmine Gollum
 ==============
