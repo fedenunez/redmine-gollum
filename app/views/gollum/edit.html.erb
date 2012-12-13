@@ -2,3 +2,11 @@
 <%= f.text_area :raw_data, :class => "wiki-edit", :cols => 100, :row => 25 %>
 <p><%= f.submit(l(:button_save)) %></p>
 <% end %>
+
+
+<% content_for :sidebar do %>
+  <%= render :partial => 'sidebar' %>
+<% end %>
+<% content_for :header_tags do %>
+    <%= stylesheet_link_tag 'file_view', :plugin => 'redmine_gollum' %>
+<% end %>

@@ -11,9 +11,28 @@ class GollumController < ApplicationController
 
   def show
     @editable = true
+    fullname     = params[:id]
+    name         = extract_name(fullname)
+    path         = extract_path(fullname) || ''
 
-    show_page(params[:id])
-    show_wiki_index()
+    if page = @wiki.page(name)
+      if path.empty?
+        redirect_to :action => :show, :id => page.url_path
+      end
+         
+      @page_name = page.name
+      @page_title = page.title
+      @page_content = page.formatted_data.html_safe 
+      if page.toc_data
+	      @page_toc = page.toc_data.html_safe
+      end
+      create_wiki_index()
+    elsif file = @wiki.file(fullname)
+      send_data file.raw_data, :type => file.mime_type, :disposition => 'inline'
+    else
+      redirect_to :action => :edit, :id => name
+      create_wiki_index()
+    end
     
   end
 
@@ -21,6 +40,7 @@ class GollumController < ApplicationController
     @name = params[:id]
     @page = @wiki.page(@name)
     @content = @page ? @page.text_data : ""
+    create_wiki_index()
   end
 
   def update
@@ -45,26 +65,16 @@ class GollumController < ApplicationController
     return @project.gollum_wiki.git_path
   end
 
-  def show_page(name)
-    if page = @wiki.page(name)
-      @page_name = page.name
-      @page_title = page.title
-      @page_content = page.formatted_data.html_safe
-    else
-      redirect_to :action => :edit, :id => name
-    end
-  end
 
-  def show_wiki_index()
+  def create_wiki_index()
       pages = @wiki.pages
       count = pages.size
-      pages_li = ''  
-
+      pages_li = ''
       count.times do | index |
         page = pages[ index ]
-        pages_li += '<li><a href="' + page.name + '">' + page.name + '</a></li>';
+        pages_li += '<li><a href="/projects/' + params[:project_id] + "/gollum/" + page.url_path + '">' + page.url_path + '</a></li>';
       end
-      @page_index = ('<ul id="pages" class="toc right">' + pages_li + '</ul>').html_safe
+      @page_index = ('<ul id="pages">' + pages_li + '</ul>').html_safe
   end
      
   def find_project
@@ -94,4 +104,18 @@ class GollumController < ApplicationController
                             :page_file_dir => wiki_dir)
 
   end
+
+  def extract_path(file_path)
+    return nil if file_path.nil?
+    last_slash = file_path.rindex("/")
+    if last_slash
+      file_path[0, last_slash]
+    end
+  end
+
+  # Extract the 'page' name from the file_path
+  def extract_name(file_path)
+    ::File.basename(file_path)
+  end
+
 end

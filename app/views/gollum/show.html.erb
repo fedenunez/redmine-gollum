@@ -9,10 +9,19 @@
 <% end %>
 </div>
 <div class="wiki wiki-page">
-<h1><%= @page_title %></h1>
+<!-- <h1><%= @page_title %></h1> //-->
+<div class="toc right">
+<%= @page_toc %>
+</div>
+
 <%= @page_content %>
 </div> 
 
 <% content_for :sidebar do %>
   <%= render :partial => 'sidebar' %>
+<% end %>
+
+<% content_for :header_tags do %>
+    <%= stylesheet_link_tag 'show_content', :plugin => 'redmine_gollum' %>
+    <%= stylesheet_link_tag 'file_view', :plugin => 'redmine_gollum' %>
 <% end %>

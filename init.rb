@@ -33,6 +33,8 @@ Redmine::Plugin.register :redmine_gollum do
            :partial => 'shared/settings'
 
   project_module :gollum do
+    permission :view_gollum_files,   :gollum_files => [:download]
+
     permission :view_gollum_pages,   :gollum => [:index, :show]
     permission :add_gollum_pages,    :gollum => [:new, :create]
     permission :edit_gollum_pages,   :gollum => [:edit, :update]
